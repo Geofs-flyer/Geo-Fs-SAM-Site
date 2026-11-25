@@ -1,71 +1,195 @@
-# GeoFS SAM Site Network (`GeoFS-SAM-Site`)
+# GeoFS SAM Network — BAGHDAD
 
-A self-contained userscript that adds a simulated Surface-to-Air Missile (SAM) air-defense network, RWR scope, countermeasures (flares & chaff), and SEAD capabilities directly into GeoFS. It reads your aircraft position every frame, runs engagement logic for each battery, and draws 3D rings, missiles, and flare trails into the GeoFS scene—nothing is sent externally.
+**Version:** 3.6.0  
+**Platform:** GeoFS 4.0  
+**Type:** Userscript / Military Simulation Add-on
 
----
+## Overview
 
-## Installation
+GeoFS SAM Network — BAGHDAD is a military simulation add-on for GeoFS that introduces a network of 13 simulated surface-to-air missile (SAM) sites positioned around Baghdad, Iraq.
 
-1. **Install Tampermonkey:** Add the Tampermonkey extension to Chrome, Edge, or Firefox (any userscript manager that accepts a `.user.js` file works).
-2. **Create the script:** Open the Tampermonkey dashboard, click the `+` tab, delete the default template, and paste the contents of `GeoFS-SAM-Site.user.js`.
-3. **Save and fly:** Save with `Ctrl + S`, then load GeoFS. The network arms itself as soon as your aircraft spawns, and the control panel appears in the top-right corner.
-4. **Tune & update:** To change ranges, systems, or network behavior, edit the script and replace the old code in Tampermonkey—it will reload on the next page refresh.
+The add-on creates an interactive air-defense environment with ground launcher vehicles, simulated missile launches, countermeasures, unguided rockets, machine-gun effects, explosions, and realistic visual and audio effects.
 
----
+The goal is to make military-style flying in GeoFS more immersive through detailed environmental effects, interactive systems, and an integrated HUD.
+
+## Features
+
+### Air Defense Network
+- 13 simulated SAM sites positioned around Baghdad.
+- Multiple simulated air-defense system types.
+- Ground launcher vehicles at every site.
+- Automatic tracking and engagement behavior.
+- Individual site status and reload behavior.
+- Destroyed sites remain visually identifiable.
+
+### Visual Effects
+- 3D missile and rocket models.
+- Realistic-looking smoke trails.
+- Persistent smoke columns that gradually expand and fade.
+- Fireball and explosion effects.
+- Black smoke from destroyed sites.
+- Visible flares and chaff.
+- Expanding explosion rings.
+- Aircraft view shake from nearby explosions and hits.
+
+### Audio Effects
+- Custom-generated missile launch sounds.
+- Rocket ignition and flight sounds.
+- Layered explosion audio.
+- Machine-gun audio effects inspired by the M61A2.
+- Flare and chaff dispensing sounds.
+- Master audio processing to improve the overall sound mix.
+
+### Defensive Countermeasures
+- Flare dispensing.
+- Chaff dispensing.
+- Simulated missile decoy behavior.
+- Visual and audio feedback when countermeasures are released.
+
+### Weapons Systems
+- Unguided rocket simulation.
+- Machine-gun simulation.
+- Visible projectile effects.
+- Simulated damage and destruction of SAM sites.
+
+### HUD & Radar
+The add-on includes a custom military-style HUD displaying:
+
+- **THREAT:** Nearest active SAM site.
+- **STATUS:** Current network status.
+- **RANGE:** Distance to the nearest active site.
+- **ALTITUDE:** Current aircraft altitude.
+- **INBOUND:** Number of incoming simulated missiles.
+- **SEEKER:** Type of incoming missile seeker.
+- **DECOYED:** Number of missiles diverted by countermeasures.
+- **CLOSEST:** Distance to the closest incoming missile.
+- **SITES:** Number of operational sites.
+- **ROCKETS:** Rocket system status.
+- **HITS TAKEN:** Number of hits registered.
+
+The radar scope displays the aircraft, SAM locations, incoming missiles, and rockets.
 
 ## Controls
 
-| Key / Input | Action |
-| :--- | :--- |
-| `,` | **Dispense two flares** — defeats IR seekers |
-| `.` | **Dispense two chaff bundles** — defeats radar seekers |
-| `L` | **Fire SEAD missile** at the nearest live battery — destroys it |
-| `J` | **Arm or disarm** the whole SAM network |
-| `W` / `S` | **Test range only** — climb or descend through the engagement band |
-| **Panel Buttons** | Touch-screen buttons for countermeasures and SEAD |
+| Key | Function |
+|---|---|
+| `,` | Dispense flares |
+| `.` | Dispense chaff |
+| `L` | Fire rockets |
+| `/` | Hold to fire machine gun |
+| `J` | Arm / disarm SAM network |
+
+The HUD also includes clickable buttons for flares, chaff, and rockets.
+
+**Note:** The machine gun requires holding `/`. Releasing the key stops firing.
+
+## Installation
+
+### Requirements
+- GeoFS
+- A userscript manager such as Tampermonkey
+- A supported desktop browser
+
+### Setup
+
+1. Install Tampermonkey in your browser.
+2. Open the Tampermonkey dashboard.
+3. Create a new userscript.
+4. Paste the complete SAM Network script into the editor.
+5. Save the script.
+6. Open or refresh GeoFS.
+
+The add-on should initialize automatically once GeoFS has loaded.
+
+### Important Installation Notes
+
+- Keep `@grant none` in the userscript header.
+- The script relies on GeoFS and Cesium being accessible through the page.
+- No external 3D model downloads are required.
+- Terrain sampling is used to position ground vehicles.
+- The script is designed around the GeoFS 4.0 environment.
+
+## Technical Information
+
+The add-on uses:
+- JavaScript
+- CesiumJS
+- HTML Canvas
+- Web Audio API
+- Browser animation frames
+- Procedurally generated visual effects
+
+The 3D world effects use Cesium entities and billboard collections. The HUD and radar scope use a separate canvas overlay.
+
+The script also includes safeguards against duplicate initialization.
+
+## Troubleshooting
+
+**HUD does not appear**
+- Check that Tampermonkey is enabled.
+- Make sure the userscript is saved and enabled.
+- Refresh GeoFS.
+
+**Only the radar scope appears**
+- Check whether Cesium is available.
+- Allow GeoFS time to finish loading.
+- Check the diagnostic message in the HUD.
+
+**Ground vehicles are missing**
+- Check whether the terrain provider has loaded.
+- Try refreshing GeoFS.
+
+**No audio**
+- Interact with the simulator to allow browser audio playback.
+- Check your browser's audio permissions and volume.
+
+**Script does not initialize**
+- Check the browser console for `[SAM]` messages.
+- Make sure another copy of the script is not already running.
+
+## Development History
+
+### Version 3.6.0 — Airframe Shake
+- Added aircraft view shake from nearby explosions.
+- Added stronger shake effects when the aircraft takes a hit.
+- Improved visual feedback from nearby events.
+
+### Version 3.5.0 — Smoke & Audio
+- Redesigned smoke trails.
+- Added master audio processing.
+- Improved machine-gun audio.
+- Improved rocket launch sounds.
+- Redesigned explosion audio.
+
+### Version 3.4.0 — Explosions & Tracking
+- Added expanded explosion effects.
+- Improved simulated missile tracking.
+- Improved hit detection.
+- Added destroyed-site smoke.
+- Improved machine-gun effects.
+
+### Version 3.3.0 — Network Improvements
+- Improved engagement timing.
+- Standardized network reload behavior.
+- Reduced HUD clutter.
+- Improved launch notifications.
+
+### Version 3.2.0 — Rendering Overhaul
+- Improved Cesium screen projection.
+- Removed expensive range-ring rendering.
+- Added ground launcher vehicles.
+- Added terrain height sampling.
+- Redesigned smoke rendering.
+- Added 3D projectile bodies.
+
+## Credits
+
+**Project:** GeoFS SAM Network — BAGHDAD  
+**Version:** 3.6.0  
+**Author:** SAM Network Workbench
+
+Thanks to the GeoFS community and the developers whose work and documentation help make simulator add-ons possible.
 
 ---
 
-## What You See and Hear
-
-* **Batteries:** Every site is drawn as a 3D launcher with its radar and a name label, sitting inside its engagement ring.
-* **Smoke and Fire:** Launches throw a smoke cloud, missiles trail smoke all the way in, and every detonation flashes, throws burning fragments, and leaves a column of smoke over the wreck.
-* **Countermeasures:** Flares burn bright, flicker, and trail their own smoke; chaff blooms as a pale cloud drifting behind your aircraft.
-* **Synthesized Sound:** Launch, detonation, flare pop, and the rumble of a battery coming apart are synthesized directly in the browser—no external audio files required.
-* **RWR Scope:** The top-right panel carries a heading-up radar scope showing live batteries, inbound missiles, and wrecks at their true bearing and range out to **70 km**.
-
----
-
-## How an Engagement Runs
-
-1. **Search:** A battery remains idle until your aircraft crosses its engagement ring. Inside the ring, it starts its lock timer (`SEARCH` → `TRACK` in the panel).
-2. **Engagement Envelope:** Lock only occurs inside the altitude band (default **1,000 to 18,000 ft**). Inside the ring but too low or too high, the site displays `TOO LOW` or `TOO HIGH` and its lock timer bleeds away.
-3. **Launch:** Once locked, the site fires and begins reloading. Ammunition is unlimited and launchers alternate between heat-seeking (IR) and radar-seeking rounds.
-4. **Guidance:** Missiles fly turn-limited pursuit—they always point at your aircraft, but are limited by airframe G-limits. Hard turns and altitude changes bleed missile energy.
-5. **Decoys:** Every `0.2s`, an inbound missile checks for countermeasures in its seeker cone within **3.5 km** (flares for IR seekers, chaff for radar seekers). Closer decoys have a higher chance of spoofing the missile permanently.
-6. **Fighting Back (SEAD):** Pressing `L` launches an anti-radiation missile at the nearest live battery within **90 km**, destroying it and removing its ring and launchers for the rest of the session.
-7. **Impact:** Inside the proximity fuse radius, your aircraft is marked destroyed, the panel scores the hit, and (if grace is enabled) the network holds fire for **9 seconds** while you reset your flight.
-
----
-
-## Systems Catalogue
-
-| System | Max Range | Seeker Type | Reload Time |
-| :--- | :---: | :---: | :---: |
-| **SA-2 Guideline** | 45 km | RADAR | 50 s |
-| **SA-3 Goa** | 25 km | RADAR | 40 s |
-| **SA-6 Gainful** | 24 km | RADAR | 32 s |
-| **SA-8 Gecko** | 12 km | RADAR | 24 s |
-| **SA-13 Gopher** | 5 km | IR | 18 s |
-| **SA-15 Tor** | 12 km | RADAR | 20 s |
-| **SA-18 Igla** | 5 km | IR | 14 s |
-| **MIM-104 Patriot** | 70 km | RADAR | 60 s |
-
----
-
-## Honest Limits
-
-* **Unofficial Add-On:** Hooks into GeoFS's internal aircraft and scene objects, so future simulator updates may affect rendering. If the panel appears without 3D visuals, open the browser console (`F12`) and check the `[SAM]` debug lines.
-* **No Native Damage Model:** GeoFS does not physically destroy aircraft. Hits are logged on the panel—use GeoFS's built-in reset to fly again.
-* **Local Simulation:** Flares, chaff, and SAM sites only exist locally while the script is running.
-* **Simplified Radar Physics:** Missiles are simulated without radar horizons, terrain masking, or Doppler notch filters. Ranges are straight-line, and the altitude band uses GeoFS's reported sea-level altitude rather than true radar altitude (AGL) over mountains.
+*GeoFS SAM Network is an unofficial community-made simulation add-on. It is not affiliated with or endorsed by GeoFS.*
