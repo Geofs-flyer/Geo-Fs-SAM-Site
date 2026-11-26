@@ -1,195 +1,92 @@
-# GeoFS SAM Network — BAGHDAD
+GeoFS SAM Network — BAGHDAD
+Version: 4.7.0
+Type: GeoFS userscript
+File: geofs-sam-baghdad.user.js
+Overview
+GeoFS SAM Network — BAGHDAD is a standalone userscript that adds an air-defense and combat scenario to GeoFS. It places a network of 18 preset surface-to-air missile (SAM) sites around Baghdad and the Zagros region, adds opposing F-16 aircraft, and provides a friendly Navy F/A-18 wingman.
 
-**Version:** 3.6.0  
-**Platform:** GeoFS 4.0  
-**Type:** Userscript / Military Simulation Add-on
+The script also adds an on-screen HUD, 3D ground vehicles, weapon effects, smoke trails, aircraft damage, and crash effects. It uses GeoFS's existing Cesium environment and aircraft model resources.
+Features
+- 18 preset SAM sites distributed around Baghdad and the Zagros region.
+- 3D launcher vehicles placed at each preset site.
+- Two F-16 bandits that can be spawned 20 statute miles (about 32.19 km) from the player's current position.
+- Navy F/A-18 wingman that flies with the player and can operate in different modes.
+- Player weapons and countermeasures, including rockets, AIM-9 missiles, a gun, flares, and chaff.
+- Custom field SAM sites that can be placed at the player's current location using the panel.
+- HUD and status panel with network information, controls, messages, and diagnostics.
+- 3D effects for missile and rocket bodies, smoke trails, fire, explosions, and aircraft crashes.
+- Weather-aware aircraft finish for supported model shaders.
+- WGS84 positioning for placing world objects using GeoFS/Cesium coordinates.
+Requirements
+- GeoFS loaded in a WebGL-capable browser.
+- A userscript manager that supports page-context execution, or access to the browser's developer console.
+- Permission for the userscript manager to run scripts on GeoFS.
+The script is configured for these GeoFS URL patterns:
+- geo-fs.com
+- geofs.com
+- Their subdomains
+No separate API key, companion script, workbench account, or manual model upload is specified as required by the script.
+Installation
+Option 1: Userscript manager
+1. Open your userscript manager.
+2. Create a new userscript.
+3. Copy the entire contents of geofs-sam-baghdad.user.js into the editor.
+4. Save the script.
+5. Make sure the manager is allowed to run it on GeoFS and that page-context execution is enabled.
+6. Load GeoFS and allow the simulator to finish loading.
+Option 2: Browser developer console
+1. Open GeoFS and wait until the simulator has fully loaded.
+2. Open the browser's developer console.
+3. Paste the entire script into the console.
+4. Run it.
+The userscript metadata uses @grant none and @inject-into page. Keep these settings: the script accesses GeoFS's own page objects.
+Controls
+Key	Action
+, (comma)	Dispense flares
+. (period)	Dispense chaff
+U	Cycle between rockets and AIM-9
+L	Fire the selected weapon
+Shift + U	Rearm after ammunition is depleted
+/ (slash, hold)	Fire the gun while held
+J	Arm the SAM network
 
-## Overview
 
-GeoFS SAM Network — BAGHDAD is a military simulation add-on for GeoFS that introduces a network of 13 simulated surface-to-air missile (SAM) sites positioned around Baghdad, Iraq.
+The HUD also provides clickable controls for several actions, including countermeasures, weapon selection and firing, rearming, spawning F-16s, selecting a battery to teleport to, and resetting the scenario.
+HUD and field-site panel
+The on-screen interface includes a network status panel and a field-site spawner.
+- Network panel: shows scenario status and communications messages.
+- F-16 spawn control: creates the opposing aircraft relative to the player's current position.
+- Wingman mode: offers AUTO, FORMATION, and ENGAGE behavior.
+- Battery selection / GO: lets the player select a listed site and teleport to it.
+- Field-site spawner: allows a custom radar or infrared site to be placed at the player's location. A newly placed field site starts OFFLINE; use the panel's activation control to bring placed field sites online.
+- Reset: resets the scenario.
+Aircraft and scenario behavior
+- The two F-16s approach from approximately 20 statute miles away.
+- The Navy F/A-18 starts near the player and can follow, engage nearby threats, and defend itself.
+- The wingman has 1,000 gun rounds and 16 unguided rockets.
+- The script models aircraft damage and crash effects.
+- Downed AI aircraft burn and fall under gravity, then produce another explosion when they contact terrain.
+- AI aircraft do not automatically respawn.
+Visuals and model loading
+The script attempts to load aircraft assets from GeoFS's own model library. The F/A-18 uses the Navy multiplayer texture (livery 1), rather than the Blue Angels paint scheme.
 
-The add-on creates an interactive air-defense environment with ground launcher vehicles, simulated missile launches, countermeasures, unguided rockets, machine-gun effects, explosions, and realistic visual and audio effects.
+Geometric fallback airframes are included so aircraft can remain represented if a model or texture fails to load. The HUD/diagnostics can report when a model is using a fallback.
 
-The goal is to make military-style flying in GeoFS more immersive through detailed environmental effects, interactive systems, and an integrated HUD.
+The world-positioning code uses WGS84 coordinates to align 3D objects with GeoFS/Cesium's ellipsoid. Smoke and fire effects use Cesium world billboards when available.
+Diagnostics
+Open the browser developer console and run:
+geofsSAM.diagnostics()
+This prints a status report that includes information such as GeoFS/Cesium availability, aircraft state, visual-layer status, wingman state, aircraft phases, and HUD mounting.
 
-## Features
-
-### Air Defense Network
-- 13 simulated SAM sites positioned around Baghdad.
-- Multiple simulated air-defense system types.
-- Ground launcher vehicles at every site.
-- Automatic tracking and engagement behavior.
-- Individual site status and reload behavior.
-- Destroyed sites remain visually identifiable.
-
-### Visual Effects
-- 3D missile and rocket models.
-- Realistic-looking smoke trails.
-- Persistent smoke columns that gradually expand and fade.
-- Fireball and explosion effects.
-- Black smoke from destroyed sites.
-- Visible flares and chaff.
-- Expanding explosion rings.
-- Aircraft view shake from nearby explosions and hits.
-
-### Audio Effects
-- Custom-generated missile launch sounds.
-- Rocket ignition and flight sounds.
-- Layered explosion audio.
-- Machine-gun audio effects inspired by the M61A2.
-- Flare and chaff dispensing sounds.
-- Master audio processing to improve the overall sound mix.
-
-### Defensive Countermeasures
-- Flare dispensing.
-- Chaff dispensing.
-- Simulated missile decoy behavior.
-- Visual and audio feedback when countermeasures are released.
-
-### Weapons Systems
-- Unguided rocket simulation.
-- Machine-gun simulation.
-- Visible projectile effects.
-- Simulated damage and destruction of SAM sites.
-
-### HUD & Radar
-The add-on includes a custom military-style HUD displaying:
-
-- **THREAT:** Nearest active SAM site.
-- **STATUS:** Current network status.
-- **RANGE:** Distance to the nearest active site.
-- **ALTITUDE:** Current aircraft altitude.
-- **INBOUND:** Number of incoming simulated missiles.
-- **SEEKER:** Type of incoming missile seeker.
-- **DECOYED:** Number of missiles diverted by countermeasures.
-- **CLOSEST:** Distance to the closest incoming missile.
-- **SITES:** Number of operational sites.
-- **ROCKETS:** Rocket system status.
-- **HITS TAKEN:** Number of hits registered.
-
-The radar scope displays the aircraft, SAM locations, incoming missiles, and rockets.
-
-## Controls
-
-| Key | Function |
-|---|---|
-| `,` | Dispense flares |
-| `.` | Dispense chaff |
-| `L` | Fire rockets |
-| `/` | Hold to fire machine gun |
-| `J` | Arm / disarm SAM network |
-
-The HUD also includes clickable buttons for flares, chaff, and rockets.
-
-**Note:** The machine gun requires holding `/`. Releasing the key stops firing.
-
-## Installation
-
-### Requirements
-- GeoFS
-- A userscript manager such as Tampermonkey
-- A supported desktop browser
-
-### Setup
-
-1. Install Tampermonkey in your browser.
-2. Open the Tampermonkey dashboard.
-3. Create a new userscript.
-4. Paste the complete SAM Network script into the editor.
-5. Save the script.
-6. Open or refresh GeoFS.
-
-The add-on should initialize automatically once GeoFS has loaded.
-
-### Important Installation Notes
-
-- Keep `@grant none` in the userscript header.
-- The script relies on GeoFS and Cesium being accessible through the page.
-- No external 3D model downloads are required.
-- Terrain sampling is used to position ground vehicles.
-- The script is designed around the GeoFS 4.0 environment.
-
-## Technical Information
-
-The add-on uses:
-- JavaScript
-- CesiumJS
-- HTML Canvas
-- Web Audio API
-- Browser animation frames
-- Procedurally generated visual effects
-
-The 3D world effects use Cesium entities and billboard collections. The HUD and radar scope use a separate canvas overlay.
-
-The script also includes safeguards against duplicate initialization.
-
-## Troubleshooting
-
-**HUD does not appear**
-- Check that Tampermonkey is enabled.
-- Make sure the userscript is saved and enabled.
-- Refresh GeoFS.
-
-**Only the radar scope appears**
-- Check whether Cesium is available.
-- Allow GeoFS time to finish loading.
-- Check the diagnostic message in the HUD.
-
-**Ground vehicles are missing**
-- Check whether the terrain provider has loaded.
-- Try refreshing GeoFS.
-
-**No audio**
-- Interact with the simulator to allow browser audio playback.
-- Check your browser's audio permissions and volume.
-
-**Script does not initialize**
-- Check the browser console for `[SAM]` messages.
-- Make sure another copy of the script is not already running.
-
-## Development History
-
-### Version 3.6.0 — Airframe Shake
-- Added aircraft view shake from nearby explosions.
-- Added stronger shake effects when the aircraft takes a hit.
-- Improved visual feedback from nearby events.
-
-### Version 3.5.0 — Smoke & Audio
-- Redesigned smoke trails.
-- Added master audio processing.
-- Improved machine-gun audio.
-- Improved rocket launch sounds.
-- Redesigned explosion audio.
-
-### Version 3.4.0 — Explosions & Tracking
-- Added expanded explosion effects.
-- Improved simulated missile tracking.
-- Improved hit detection.
-- Added destroyed-site smoke.
-- Improved machine-gun effects.
-
-### Version 3.3.0 — Network Improvements
-- Improved engagement timing.
-- Standardized network reload behavior.
-- Reduced HUD clutter.
-- Improved launch notifications.
-
-### Version 3.2.0 — Rendering Overhaul
-- Improved Cesium screen projection.
-- Removed expensive range-ring rendering.
-- Added ground launcher vehicles.
-- Added terrain height sampling.
-- Redesigned smoke rendering.
-- Added 3D projectile bodies.
-
-## Credits
-
-**Project:** GeoFS SAM Network — BAGHDAD  
-**Version:** 3.6.0  
-**Author:** SAM Network Workbench
-
-Thanks to the GeoFS community and the developers whose work and documentation help make simulator add-ons possible.
-
----
-
-*GeoFS SAM Network is an unofficial community-made simulation add-on. It is not affiliated with or endorsed by GeoFS.*
+The script also logs startup messages with the [SAM] prefix.
+Troubleshooting
+- Nothing appears: confirm GeoFS has fully loaded before running the script, and check that the browser supports WebGL.
+- Userscript does not start: confirm the userscript manager permits page-context execution and has permission to run on the GeoFS domain.
+- An aircraft model is missing: check the console and diagnostics. The script includes geometric fallback visuals for model-loading failures.
+- The script says it is already online: it detected the window.__SAMNET flag and did not start a second instance. Reloading the GeoFS page clears the page's runtime state.
+- The script reports an incomplete source template: use the complete script exported by the workbench rather than a partial/template source.
+Notes
+- The script is designed to run inside GeoFS, not as a standalone web page.
+- The simulation and its visual effects depend on GeoFS's runtime objects and Cesium.
+- Browser extensions may require additional site permissions.
+- Performance will vary with browser, hardware, and the number of active visual effects and entities.
